@@ -1,0 +1,517 @@
+================================================================================================================================================
+VMWare and Ubuntu Setup
+================================================================================================================================================
+
+Download VMWare.
+https://www.vmware.com/products/workstation-player/workstation-player-evaluation.html
+ - Try Workstation 16.0 Player for Windows
+
+Download Ubuntu Image.
+https://releases.ubuntu.com/20.04/
+ - Desktop image - 64-bit PC (AMD64) desktop image
+ 
+Install VMWare. Once VMWare installation is done, open it and click on "Create a new Virtual Machine"
+Select the ubuntu image that is shared and click on next (Note: Either select the ubuntu image that is shared or 
+download it from https://releases.ubuntu.com/18.04/) 
+and the location it's installed in my system is C:\Users\chejagan\Documents\Virtual Machines. 
+Don't select Cisco OneDrive location)
+
+Note: 
+1. Select 'Store virtual disk as a single file'. No not select 'Split virtual disk into multiple files.
+2. Maximum disk sinze (GB): 180
+3. Click "Customize Hardware" and mention Memory as 16 GB, Processor as 8 and Hard Disk as 180 GB
+
+Enter your Full Name, User Name as your cec id, Pwd as some simple 4 digit/chars, Confirm Password
+
+Finish installation.
+
+================================================================================================================================================
+Install Notepad++
+================================================================================================================================================
+
+Click on windows button being on ubuntu screen
+Type 'Ubuntu Softare' under search and open it
+Go to search again and type Notepad
+Select the Notepad++ and install it on ubuntu.
+
+================================================================================================================================================
+Installing Google Chrome
+================================================================================================================================================
+
+Ref: https://linuxize.com/post/how-to-install-google-chrome-web-browser-on-ubuntu-20-04/
+
+Open your terminal either by using the Ctrl+Alt+T keyboard shortcut or by clicking on the terminal icon. Use wget to download the latest Google Chrome .deb package :
+
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+Running the following command as a user with sudo privileges to install Chrome .deb package on your system:
+
+sudo apt install ./google-chrome-stable_current_amd64.deb
+
+================================================================================================================================================
+GIT installation
+================================================================================================================================================
+
+sudo apt update
+sudo apt install git
+sudo apt install gitk
+git --version
+git config --global user.name "sunil kumar"
+git config --global user.email "kumsuni2@cisco.com"
+
+================================================================================================================================================
+Create SSH Key and Add SSH Key to your Cisco's Bitbucket Server account
+================================================================================================================================================
+
+Ensure VPN is connected and Login to https://gitscm.cisco.com/projects/CLPSVS/repos/clip-app/ with your cec id and pwd. Check you've got access to clip-app repository. If you've access and follow below steps. Else, get the repo access first before doing below steps.
+
+Execute the below command in terminal to create a SSH key.
+ssh-keygen -t rsa -C "kumsuni2@cisco.com"
+
+Note: Keep clicking enter key for 3-4 times until the questions asked gets over.
+
+Install xclip by executing below command
+sudo apt install xclip
+
+Run the below command in terminal which will copy your SSH key that was generated in prev step. 
+xclip -selection clipboard < ~/.ssh/id_rsa.pub
+
+Open https://gitscm.cisco.com/plugins/servlet/ssh/account/keys
+Click on 'Add Key' button
+Just paste(ctrl+v) the SSH key and click on done.
+
+Paste the copied SSH key under below mentioned link by clicking on 
+
+Just FYI - External References that has procedure to Create SSH Key and Add SSH Key to your Bitbucket Server account
+https://confluence.atlassian.com/bitbucketserver0510/creating-ssh-keys-951390552.html?utm_campaign=in-app-help&utm_medium=in-app-help&utm_source=stash
+https://confluence.atlassian.com/bitbucketserver0510/ssh-user-keys-for-personal-use-951390557.html
+
+================================================================================================================================================
+Clone all CLIP projects
+================================================================================================================================================
+
+First create a folder named clip inside your ubuntu home directory
+
+Go inside 'clip' folder that you've created and then execute below clone commands being inside inside clip folder
+
+cd /home/cj/clip
+
+git clone ssh://git@gitscm.cisco.com/clpsvs/clip-app.git
+ - clip-app: https://gitscm.cisco.com/projects/ASF/repos/clip-app/browse
+
+git clone ssh://git@gitscm.cisco.com/clpsvs/clip-mobile.git
+clip-mobile: https://gitscm.cisco.com/projects/CLPSVS/repos/clip-mobile/browse
+
+git clone ssh://git@gitscm.cisco.com/clpsvs/clip-app-down.git
+ - clip-app-down: https://gitscm.cisco.com/projects/CLPSVS/repos/clip-app-down/browse
+
+git clone ssh://git@gitscm.cisco.com/clpsvs/clip-mobile-down.git
+clip-mobile-down: https://gitscm.cisco.com/projects/CLPSVS/repos/clip-mobile-down/browse
+
+git clone ssh://git@gitscm.cisco.com/clpsvs/clip-bot.git
+ - clip-bot: https://gitscm.cisco.com/projects/CLPSVS/repos/clip-bot/browse
+
+For cloning clip-db, follow below steps
+
+cd /home/chejagan/clip/
+sudo apt install git-lfs
+git clone ssh://git@gitscm.cisco.com/clpsvs/clip-db.git
+ - OR, you could try this if in case the above mentioned clone command don't work - git lfs clone ssh://git@gitscm.cisco.com/clpsvs/clip-db.git
+cd clip-db
+git lfs install
+git lfs fetch
+git lfs checkout
+git lfs ls-files | wc -l
+ - This should show around 549 files
+chmod -R 777 iwe-clip/
+cd iwe-clip
+
+Note: Keep system window alive for 10 hrs if the download speed is 250 kbps as the clip-db folder is around 6GB in size, so.
+
+================================================================================================================================================
+Installing Maven
+================================================================================================================================================
+
+Apache Maven 3.6.3
+
+https://downloads.apache.org/maven/maven-3/3.6.3/binaries/
+
+Download apache-maven-3.6.3-bin.zip and extract it under /home/softwares/ folder
+
+================================================================================================================================================
+Installing Java
+================================================================================================================================================
+
+Ref: https://tecadmin.net/install-oracle-java-8-ubuntu-via-ppa/
+
+Install Java 8 on Ubuntu: The OpenJDK 8 is available under default Apt repositories. You can simply install Java 8 on an Ubuntu system using the following 2 commands. Run below commands to install Java 8 on Ubuntu
+
+sudo apt update
+sudo apt install openjdk-8-jdk openjdk-8-jre
+
+
+================================================================================================================================================
+Set JAVA_HOME and M2_HOME
+================================================================================================================================================
+
+Run the below command to know where Java is installed
+
+readlink -f $(which java)
+
+The above command would show below mentioned path where java is installed in your ubuntu os
+/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+
+Note: Go to usr folder and see where the bin directory is. Generally it would be inside  like /usr/lib/jvm/java-8-openjdk-amd64. So, the java path should have /usr/lib/jvm/java-8-openjdk-amd64/bin
+
+
+Run the below command in terminal which will open a file.
+
+sudo gedit /etc/bash.bashrc
+
+Add the following lines at the end of the file
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=${PATH}:${JAVA_HOME}/bin
+export M2_HOME=/home/cj/softwares/apache-maven-3.8.4
+export PATH=${PATH}:${M2_HOME}/bin
+
+click on save button availabe at the top right corner of the file.
+
+Then close the gedit. And run the below command :
+
+source /etc/bash.bashrc
+
+Check everything is fine by running below commands:
+
+echo $JAVA_HOME
+echo $M2_HOME
+echo $PATH
+mvn -v
+mvn -version
+java -version
+javac -version
+
+
+================================================================================================================================================
+Build the CLIP project to create war file
+================================================================================================================================================
+
+cd /home/cj/clip/clip-app/
+git config --global user.name "Chethan Jagannath"
+git config --global user.email "chejagan@cisco.com"
+
+Option 1: Build using maven running inside docker:
+
+rm -rf ui_build_cache node node_modules target
+sudo docker run --rm -it --name=maven --user=$(id -u):$(id -g) -v $HOME/.m2:/var/maven/.m2  -v $(pwd)/..:/clip-app -w /clip-app/clip -e MAVEN_CONFIG=/var/maven/.m2 maven:3.6-jdk-8 mvn -Duser.home=/var/maven clean package
+
+
+Option 2: Build using external maven which is download in the previous step
+
+mvn clean package
+
+Note: Ensure clip-local.properties has this set -> domain.url=http://localhost:8080/services/clip
+
+================================================================================================================================================
+Eclipse
+================================================================================================================================================
+
+https://www.eclipse.org/downloads/packages/release/2020-06/r
+
+Linux x86_64
+
+Eclipse workspace: /home/cj/eclipse-workspace
+
+Open Eclipse application
+File -> Import -> Existing Maven Project -> Browse till /home/cj/clip/clip-app/clip/pom.xml
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+Extra information: Creating A Desktop Launcher For Eclipse - https://beamtic.com/create-launcher-for-eclipse
+
+nano ~/.local/share/applications/eclipse.desktop
+
+Paste the below content
+
+[Desktop Entry]
+Type=Application
+Name=Eclipse
+Comment=Eclipse Integrated Development Environment
+Icon=/home/cj/softwares/eclipse/icon.xpm
+Exec=/home/cj/softwares/eclipseeclipse
+Terminal=false
+Categories=Development
+StartupWMClass=Eclipse
+
+ctrl+0 -> ctrl + c -> ctrl+x
+
+Search for eclipse in search bar OR click on windows button being on Ubuntu -> Right click -> Add to favorites. Now you could see the eclipse icon. 
+
+Everytime you could click on Eclipse icon to open it.
+
+
+================================================================================================================================================
+SQL Developer
+================================================================================================================================================
+
+https://www.oracle.com/tools/downloads/sqldev-downloads.html
+ - Create an Oracle id using your personal email address. Login is required to download any oracle freeware software
+
+Get the sqldeveloper folder and extract it.
+ -  Better download SQL Developer Version 19.2.0.206
+
+After the download is complete, open terminal just outside "sqldeveloper" folder and execute below command to move it to opt folder
+
+cd /home/cj/softwares
+ls
+
+sudo mv sqldeveloper /opt/
+
+Being inside opt folder execute below command to give permission
+
+cd /opt
+chmod 777 sqldeveloper/
+
+Execute the below commands to run the sql developer
+cd /opt/sqldeveloper
+sh sqldeveloper.sh
+
+Default JDK not found - Type the full pathname of a JDK installation (or Ctrl-C to quit), the path will be stored in /home/cj/.sqldeveloper/21.4.2/product.conf
+
+/usr/lib/jvm/java-8-openjdk-amd64
+
+
+================================================================================================================================================
+Docker
+================================================================================================================================================
+
+Execute below command to install docker
+sudo apt install docker.io
+
+Download LINUX.X64_193000_db_home.zip from below link. Search for LINUX.X64_193000_db_home.zip which will be under Oracle Database 19c (19.3) for Linux x86-64
+https://www.oracle.com/database/technologies/oracle19c-linux-downloads.html
+ - https://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html
+
+Next, follow the clip-developers guide created by Berny on further docker steps. 
+Note: 
+1. Just blidly execute the commands mentioned over there, no changes at all. But, make a note of below 2 points while following the clip-developers guide
+2. Execute the clone command by opening a terminal in home directory (The clone will automatically create a folder named docker-images under home directory
+3. It's not ./buildDockerImage.sh -v 19.3.0 -e that is mentioned in the doc, enter the below comand
+sudo ./buildContainerImage.sh -v 19.3.0 -e
+
+verify the images is created successfully by executing below
+sudo docker images
+
+The above command should display below 2 images created:
+oracle/database of 6.54GB
+oraclelinux of 132MB
+
+-- Now that we have the Oracle Docker image available we can run it and create a database in a container.
+-- First we create a local Docker network to ease database connectivity later:
+sudo docker network create clip-net
+
+-- Then create a named Docker volume to store our database files:
+sudo docker volume create clip-db-oradata
+
+-- Now create a Docker container running Oracle. Upon the first run a new Oracle database will be created:
+sudo docker run --name clip-db --net=clip-net -p 1521:1521 -p 5500:5500 -e ORACLE_SID=CLIPDB -e ORACLE_PDB=CLIPDB1 -e ORACLE_PWD=password -e ORACLE_CHARACTERSET=UTF8 -e TZ="America/Los_Angeles" -v clip-db-oradata:/opt/oracle/oradata oracle/database:19.3.0-ee
+
+
+-- Wait for 15-20 mins after executing above command, untill you see below lines at the end
+#########################
+DATABASE IS READY TO USE!
+#########################
+
+
+======== Run below commands in new terminal ================
+
+
+=== To listdown the running images ===
+sudo docker image ls
+
+
+sudo docker run --rm -it --net=clip-net -e NLS_LANG=AMERICAN_AMERICA.UTF8 oracle/database:19.3.0-ee sqlplus SYSTEM/password@clip-db/CLIPDB1
+
+
+select systimestamp from dual;
+
+exit;
+
+cd /home/cj/clip/clip-app/
+chmod -R 777 clip/
+cd /home/cj/clip/clip-app/clip
+
+
+sudo docker run --rm -it --net=clip-net --user=$(id -u):$(id -g) -v $(pwd):/clip -w /clip -e NLS_LANG=AMERICAN_AMERICA.UTF8 oracle/database:19.3.0-ee sqlplus SYSTEM/password@clip-db/CLIPDB1 @src/db/misc/local-clip-db.sql
+
+
+
+-- Wait for 5-10 mins after executing above command, untill you see below lines at the end
+
+Commit complete.
+
+Disconnected from Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+
+Import CLIP Database (DB Refresh)
+
+
+cd /home/cj/clip/clip-db
+git status
+git checkout .
+git fetch -v --prune origin
+git rebase origin/master
+
+
+cd /home/cj/clip/clip-db
+chmod -R 777 iwe-clip/
+
+
+cd /home/cj/clip/clip-db/iwe-clip
+ls
+
+Note: By executing above command, all files should look in green. When means you've got full permission on those files to Read, Write & Delete.
+
+======== Below command is time command which starts executing the scripts i.e gets a "copy" of prod data to your local for working locally ======== 
+sudo time docker run --rm -it --net=clip-net --user=$(id -u):$(id -g) -v $(pwd):/import -w /import oracle/database:19.3.0-ee ./db-import.sh -s clip0/password@clip-db/CLIPDB1
+
+
+
+Note: If you see below errors, re-run the above mentioned 'time' command once again.
+
+Errors exist, do not ignore them!
+
+ORA-20000: Oracle Text error:
+ORA-06512: at "CTXSYS.DRUE", line 186
+ORA-06512: at "CTXSYS.DRVLSB", line 50
+ORA-06512: at "CTXSYS.CTX_DDL", line 45
+ORA-06512: at line 1
+
+grep '^\(ORA\|SP2\)' db-import.log
+
+
+Upgrade CLIP Database
+=====================
+The develop branch may have associated database changes which should be applied to the local database before executing the code. Navigate to clip-
+app/clip/src/db/scripts/release and execute the run-db-upgrade.sh script in the local database:
+
+
+cd /home/cj/clip/clip-app/clip/src/db/scripts/release
+ls
+
+sudo ./run-db-upgrade.sh
+
+
+================================================================================================================================================
+Some Notes to follow:
+================================================================================================================================================
+
+1. Open SQL developer and execute below to get unicorn access. After you could able to open the unicorn page, add all the required roles to work on any service
+
+cd /opt/sqldeveloper
+sh sqldeveloper.sh
+
+
+Insert into CISCO_USER_ROLE (USER_ID,ROLE_NAME,CISCO_USER_ROLE_ID,CREATE_DATE,CREATED_BY,UPDATE_DATE,UPDATED_BY,JUSTIFICATION) values ((select user_id from cisco_user where email_id='chejagan'),'ROLE_UNICORN',hibernate_sequence.nextval,sysdate,'chejagan',sysdate,'chejagan','Project Need');
+
+commit;
+
+
+2. Go to Unicorn page -> Security Settings -> BEMS Admin Access -> Add some BU for you like ROSG, ABU, WEBEX to become admin for that BU. 
+ - After becoming some BU admin for BEMS , you could able to goto BEMS admin tab and add some Routing queues like NCS1000, NCS2000, NCS4000, 7600 to see BEMS cases pertaining to those queues.
+
+3. Ensure, the service password of customer search, partner serach and other required services matches with your local db coparing with Stage. Else, you se 400 (Not permitted / Auth issue) when your local application tries to invoke their service. Basically, we need to ensure the client password of clip_property table are in sync with stage db creds to invoke any extternal service of CLIP.
+
+================================================================================================================================================
+Tomcat (Tomcat 9 Docker Image)
+================================================================================================================================================
+
+---- More clarification on set-up tomcat9 image on docker, go through readme.md whcih is available under /home/cj/clip/clip-app/clip/docker/tomcat9/ folder
+
+---- To remove any old tomcat9 docker image
+
+sudo docker images
+sudo docker rmi 22d923d5caa0
+ - Pick the above mentioned image id from Repository: clip-tomcat-no-ssl having Tag: v9.0.0
+
+
+---- NOTE: Before building image, add necessary users in tomcat-users.xml available under /home/cj/clip/clip-app/clip/docker/tomcat9/ folder
+---- Ensure clip-local.properties has this set -> domain.url=http://localhost:8080/services/clip
+---- Build Tomact9 Docker Image. This will take 10 seconds to build an image.
+
+cd /home/cj/clip/clip-app/clip/docker/tomcat9
+sudo docker build --no-cache -t clip-tomcat-no-ssl:v9.0.0 -f Dockerfile .
+
+
+---- Once the image is built, at the end you'll see below 2 lines having the tomcat9 docker image id
+Successfully built f95b6834fa9a
+Successfully tagged clip-tomcat-no-ssl:v9.0.0
+
+
+---- Run CLIP container from `clip-app/clip` directory (Run the CLIP application on tomcat9 docker image)
+
+cd /home/cj/clip/clip-app/clip
+sudo docker run --name=tomcat --net=clip-net --rm  -it -p 8080:8080 -p 8787:8787 -v "$(pwd)/target/clip-app-54.0-SNAPSHOT.war:/usr/local/tomcat/webapps/services#clip.war" clip-tomcat-no-ssl:v9.0.0
+
+
+================================================================================================================================================
+Verify eclipse.ini. It should have -vm pointing to current java bin folder like shown below
+================================================================================================================================================
+
+-startup
+plugins/org.eclipse.equinox.launcher_1.5.700.v20200207-2156.jar
+--launcher.library
+plugins/org.eclipse.equinox.launcher.gtk.linux.x86_64_1.1.1200.v20200508-1552
+-product
+org.eclipse.epp.package.jee.product
+-showsplash
+org.eclipse.epp.package.common
+--launcher.defaultAction
+openFile
+--launcher.defaultAction
+openFile
+--launcher.appendVmargs
+-vm
+/usr/lib/jvm/java-8-openjdk-amd64/bin
+-vmargs
+-Dosgi.requiredJavaVersion=1.8
+-Dosgi.instance.area.default=@user.home/eclipse-workspace
+-XX:+UseG1GC
+-XX:+UseStringDeduplication
+--add-modules=ALL-SYSTEM
+-Dosgi.requiredJavaVersion=1.8
+-Dosgi.dataAreaRequiresExplicitInit=true
+-Xms256m
+-Xmx2048m
+--add-modules=ALL-SYSTEM
+
+================================================================================================================================================
+curl
+================================================================================================================================================
+sudo apt install curl
+
+
+================================================================================================================================================
+Commands to give full permission
+================================================================================================================================================
+abc
+--def
+---ghi
+
+To give permission to def folder, go inside abc folder and execute below
+
+sudo chmod -R 777 /def
+OR
+chmod 777 def/
+
+
+Create Directory with mkdir:
+sudo mkdir /var/DirectoryName
+
+To give all permissions to a folder give chmod -R 777:
+sudo chmod -R 777 /var/DirectoryName
+
+
+

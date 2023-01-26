@@ -1,0 +1,731 @@
+=========================
+What is Operating System ?
+=========================
+
+-> Operating System is a software 
+
+-> It acts as a mediator between end user and computer hardware components
+
+-> OS is mandatory is mandatory to use a computer
+
+-> There are several Operating Systems available in the market
+
+	Ex:	Windows, Linux, Unix, Solaris, Mac, Android, IOS etc...
+
+========
+Windows
+========
+
+1) Windows OS developed by Microsoft
+
+2) Widows is Licensed OS
+
+3) Windows is single user based OS (only one person can use at a time)
+
+4) Security features are very less in windows OS
+
+5) Windows OS is recommended for personal use
+
+
+=======
+Linux
+=======
+
+1) Linux OS is developed by Linus Torvalds
+
+2) Linux is free & open source OS
+
+3) Linux is Multi User based OS (multiple users can use Linux Machine at a time)
+
+4) Security Features are very high in Linux OS
+
+5) Linux OS is higly recommended for applications deployments & servers setup
+
+=============
+History of Linux
+=============
+
+-> Linus Torvalds identified few issues in Unix and told to Unix team to change the Unix OS
+
+-> Unix team didnt accept Linus Torvalds changes
+
+-> Linus Torvalds started developing his own Operating System by using 'Minux' OS
+
+			(Li)nus Toravalds    +	Mi(nux)  ==> Linux OS
+
+-> Linus Torvalds released Linux OS for free of cost
+
+-> Linux Torvalds provided Linux OS source code also in the internet	
+
+-> People and companies downloaded source code of Linux OS and they modified according to their requirement and released into market with their brand names
+
+-> As companies released their own Linux OS we can see several distributions for Linux OS
+
+	Ex:
+
+			Ubuntu
+			CentOS
+			RedHat
+			Fedora
+			SUSE
+			KALI 
+			Debian etc....
+
+Note: There are 200+ Linux Distributions available in the market
+
+
+================
+Environment Setup
+================
+
+1) Create Account in AWS (Free Tier)
+
+2) Create Linux Virtual Machine in AWS using EC2 service
+
+3) Connect to Linux Virtual Machine using MobaXterm / Putty
+
+
+================
+Linux File System
+================
+============================07-06-DevOps-AWS-15-Sep-22===========================
+
+Everything will be represented as file in Linux
+
+3 Types of Files
+
+1) Normal Files 
+
+2) Directory Files (Folders)
+
+3) Link Files
+
+-> Normal file will start with '-'
+
+-> Directory file will start with 'd'
+
+-> Link file will start with 'l'
+
+==============
+Files creation
+=============
+
+touch : It is used to create empty files
+
+Syntax:
+
+		touch <filename>
+
+		touch f1.txt
+		
+		touch a1.txt a2.txt a3.txt
+
+cat :  It is used to create files with content & it is used to print file content
+
+Syntax:
+
+	cat > filename   : Create file with data   (ctrl + d to close the file)
+
+	cat >> filename  : Append data to existing file
+
+	cat  filename   : Print file content 
+
+	cat filename1  >  filename2  : Copy data from one file to another file
+
+	cat  f1.txt f2.txt > f3.txt  : Copy more than one file data into another file
+
+
+mv : It is used to move/rename the files
+
+Syntax:
+
+		mv present-name  new-name
+
+
+rm : It is used to remove the files
+
+syntax:
+		rm filename
+
+
+=====================
+Working with Directories
+=====================
+
+mkdir : it is used to create/make directory
+
+rmdir : it is used to remove only empty directory
+
+rm -r  <dirname> : It is used to delete non-empty directories
+
+cd <dirname>  : Change directory
+
+cd ..  : Come out from the directory
+
+ls -l <dirname> : list the content of given directory
+
+
+
+cat <filename>   : It will display all the data available in the file
+
+head  : It will display first 10 lines of the file  from top  (10 is the default count)
+
+			head  <filename>  (it will give first 10 lines of data)
+			head  -n  15 <filename>     (it will give first 15 lines of data)
+			head  -n  25 <filename>   (it will give first 25 lines of data)
+
+tail   :  It will display last 10 lines of the file from bottom (10 is the default count)
+
+			tail  <filename>   (it will give last 10 lines data)
+			tail -n 15 <filename>   (it will give last 15 lines data)
+			tail -n 25 <filename> (it will give last 25 lines data)
+
+			tail -n 50 <filename> (it will give last 50 lines data)
+			tail -n +50 <filename> (it will give data from 50th line to till last line)
+
+Note: To get latest data from file we need to use 'tail' command because lastest data will be appended at bottom
+			
+
+grep  : Global Regular Expression Print
+
+-> Grep is used for searching 
+	
+		grep -i 'Linux' *    (It will search for linux word in  all the files)
+
+		grep -i 'Linux' <filename>   (it will search for linux word in given filename)
+
+wc :  (word count) it is used to count no.of lines, words and  no.of characters of given file
+
+		wc  <filename>
+
+
+cp : It is used for copy and paste
+
+		cp  <filename>  <filename>
+
+Note: If we want to copy more than one file data then we should go for 'cat' command
+
+		cat f1.txt f2.txt > f3.txt
+
+mv : it is used for renaming & moving
+
+		mv  <existing-file-name>  <new-file-name>
+
+		mv  <source>  <destination>
+
+
+
+==================
+Text Editor
+====================
+vi : Visual Editor
+
+vi <filename>  : It will open the file
+
+press 'i' to enter into 'insert' mode
+
+-> in insert mode we can change file data
+
+press 'esc' to come out from insert mode
+
+press :wq to save and quit the file
+
+press :q! to close the file without saving
+
+
+=================
+SED : Stream Editor
+=================
+
+-> It is used to perform search, find, replace, insert and delete
+
+-> This command is famous for substitution (replacement)
+
+-> Using SED command we can perform operations without opening the file
+
+
+
+sed 's/Python/JAVA/' python.txt     (it will print output on console but original data will not modified in the file)
+
+sed -i 's/Python/JAVA/' python.txt  (it will make changes in original file)
+
+sed -i '5d' <filename>  (it will delete 5th line)
+
+
+
+
+=============
+Man command
+=============
+
+-> It will provide information about given command (documentation command)
+
+man ls
+
+man cat
+
+man tac
+
+
+======================
+Find & Locate Commands
+======================
+
+-> find & locate commands are used for file search in linux machine
+
+-> locate command will perform search operation in locate database (internal database in linux)
+
+-> find command will perform search operation in entire linux file system (It will give accurate result)
+
+
+locate apache (it will give all the files path which are having apache in the file name)
+
+locate -c apache (it will give file count)
+
+find /home -name python.txt   (it will search for the file with name python.txt inside /home directory)
+
+find /home -type f -empty (It will print all empty files available inside /home directory)
+
+find /home -type d -empty (it will print all empty directories)
+
+===========
+history
+===========
+
+-> It will give commands execution history
+
+
+
+===============================
+
+ls -ltr
+touch
+cat
+tac
+rm
+mv
+mkdir
+rmdir
+rm -r <dirname>
+head <filename>
+head -n 100 <filename>
+tail <filename>
+tail -n 50 <filename>
+tail -n +25 <filename>
+grep
+wc
+vi
+sed
+man
+find
+locate
+history
+
+
+
+
+#################################
+Working with User Accounts in Linux
+################################
+
+==================================10-06-DevOps-AWS-19-Sep-22==============================
+
+-> Linux is a multi-user operating system
+
+-> With in one linux machine we can create multiple user accounts
+
+-> Multiple users can access one linux vm at a time and they can perform Multi-tasking
+
+
+Note: Every linux machine will have 'root' account ( super user --> sudo )
+
+
+-> When we launch a linux vm using 'Amazon Linux AMI' we will get 'ec2-user' account by default
+
+
+whoami -> it will give currently logged in username
+
+id <username> : It will give information about user account
+
+pwd : It will display present working directory
+
+
+Note: For every user account, one home directory will be created.
+
+For ec2-user account the home directory is  :  /home/ec2-user
+
+
+# Switch to root user
+
+$ sudo su
+
+Note: To perform admin activities we will use 'sudo' permission
+
+
+#################
+Create user in linux
+#################
+
+# create user
+$ sudo useradd  <username>
+
+# set password for user
+$ sudo passwd <username>
+
+# verify user account details
+$ id <username>
+
+# List all users in Linux
+$ cat /etc/passwd
+
+# switch user account
+$ su <username>
+
+Note: After swithcing username, change home directory also
+
+# delete user
+$ sudo userdel <username>
+
+# Display all groups 
+$ cat /etc/group
+
+# Create a group
+$ sudo groupadd <groupname>
+
+# Add user to a group
+$ sudo usermod -aG <group-name> <user-name>
+
+# Remove user from the group
+$ sudo gpasswd -d <username> <group-name>
+
+# Delete group
+$ sudo groupdel <group-name>
+
+# print users who are belongs to particular group
+$ sudo lid -g <group-name>
+
+
+===============
+File Permissions
+===============
+
+-> File Permissions will decide who can do what on that file 
+
+-> Every File will have 3 types of permissions
+
+		1) Read  (r)
+		2) Write (w)
+		3) Execute (x)
+
+-> In Linux, File Permissions are divided into 3 sections
+
+		1) User Permissions  (first 3 characters)
+		2) Group Permissions (charters 4, 5, 6)
+		3) Others Permissions (charaters 7,8 & 9)
+
+	Ex:   rwxrwxrwx
+
+
+-> To change file permissions we have 'chmod' command
+
+
+// add execute permission for user
+$ chmod u+x <filename>
+
+// add execute permission for group
+$ chmod g+x <filename>
+
+// remove write permission for group
+$ chmod g-w <filename>
+
+// add write & execute permissions for others
+$  chmod o+wx <filename>
+
+// add write permissions for others (2 files at a time)
+$ chmod o+w <file1> <file2>
+
+
+************** We can represent file permissions with Numeric Numbers also ****************
+
+0 - No Permission
+
+1 - Execute
+
+2 - Write
+
+3 - Execute & Write
+
+4 - Read
+
+5 - Read & Execute
+
+6 - Read & Write
+
+7 - Read, Write & Execute
+
+
+
+$ chmod 777 <filename>
+
+$ chmod 765 <filename>
+
+
+#########
+chown
+########
+
+-> 'chown' command is used to change file ownership
+
+-> We can see owner of the file using 'ls -l' command
+
+# changing owner of a file
+
+$ sudo chown <uname> <filename>
+
+-> We can change file owner using userID also
+
+$ sudo chown <UID> <filename>
+
+Note: We can get UID for username using 'id uname' command
+
+$ id ramesh
+
+# change group of a file
+$ sudo chown :groupName <fileName>
+
+
+Q) What is the difference between 'chmod' and 'chown' commands ?
+
+
+chmod ---> it is used for managing file permissions
+
+chown ---> it is used for managing file ownership
+
+
+====================
+Networking Commands
+====================
+
+ifconfig  : This command is used to get ip address of our machine
+
+ping  : It is used to check connectivity
+
+		$ ping <ip>
+
+-> 0% packet loss means our ping is succesful (we got response from server)
+
+-> 100% packet loss means our ping is failure (no response from server)
+
+wget : It is used to download a resource from internet using URL
+
+		$ wget <url>
+
+		$ wget https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.zip
+
+Note: We can extract that zip file using 'unzip' command
+
+		$ unzip <zip-file-name>
+
+curl  : It is used to send http request to a server
+
+		$ curl <url>
+
+
+============================
+Softwares Installation In Linux
+============================
+
+-> To install softwares in Linux we will use Package Manager
+
+-> There are several package managers available for Linux
+
+
+1) yum
+2) apt
+3) deb
+4) RHEL
+
+-> Based on Linux distribution we need to choose package manager
+
+Amazon Linux / Cent OS / Red Hat -------> yum 
+
+Ubuntu / Debian ---> apt
+
+# update existing packages
+$ sudo yum update -y
+
+# install git client software in linux
+$ sudo yum install git
+
+# check git version
+$ git --version
+
+# install java
+$ sudo yum install java
+
+# install java 1.8 version
+$ sudo yum install java-1.8.0-openjdk
+
+# check java version
+$ java -version
+
+# install maven 
+$ sudo yum install maven
+
+# check maven version
+$ mvn -version
+
+# Un-install software
+$ sudo yum remove maven
+
+
+==============================
+Hosting Static website in Webserver
+==============================
+
+-> Website nothing but collection of web pages
+
+-> Websites are 2 types
+
+	1) static website
+	2) dynamic website
+
+-> static website will give same response for everybody (fixed content)
+
+-> dynamic website means content will display based on user action
+
+-> To run the website we need to deploy that website inside a server
+
+
+
+######## install webserver #######
+
+$ sudo yum install httpd
+
+Note: httpd is a web server package and it is used for static websites hosting
+
+########## start webserver #############
+
+$ sudo service httpd start
+
+
+Note: HTTPD webserver runs on HTTP protocol with 80 port number (enable that in security group inbound rules)
+
+
+########## modify webpage content #############
+
+$ cd /var/www/html
+
+$ sudo vi index.html  
+
+Note: write content in index.html file then save and close
+
+############ Access website using EC2 VM public ip in your browser ################
+
+		URL : http://13.233.129.51/ 
+		
+		URL : http://13.233.129.51:80/
+
+
+
+*************  Note: To deploy & run dynamic websites we will use below servers ***************
+
+1) Apache Tomcat
+2) JBOSS
+3) Weblogic
+4) WebSphere
+5) Glassfish etc....
+
+==================
+Linux Architecture
+==================
+
+-> Linux Architecture works based on 4 layers
+
+1) Applications
+
+2) Shell
+
+3) Kernel
+
+4) Hardware Components
+
+
+Hardware − Hardware consists of all physical devices attached to the System. 
+For example: Hard disk drive, RAM, Motherboard, CPU etc.
+
+Kernel − Kernel is the core component for any (Linux) operating system which directly interacts with the hardware.
+
+Shell − Shell is the interface which takes input from Users and sends instructions to the Kernel, Also takes the output from Kernel and send the result back to output shell.
+
+Applications − These are the utility programs which runs on Shell. This can be any application like Your web browser, media player, text editor etc.
+
+
+=======================================
+
+Q) How to find machine running time ?
+
+$ uptime : It is used to find from how many hours our machine is running
+
+Q) How to find free space available in linux machine
+
+$ df -h : It is used to find out how much free space available in our machine
+
+Q) how to change password of user ?
+
+$ sudo passwd username
+
+Q) How to display list of users available in linux ?
+
+$  cat /etc/passwd : It will print all users available in linux
+
+Q) How to display all groups available in Linux ?
+
+$ cat /etc/group : It will print all groups available in linux
+
+Q) How to assign an user for a group ?
+
+$ sudo usermod -aG <groupName> <uname>
+
+Q) What is sudo in linux ?
+
+-> Super user (administrator permissions)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

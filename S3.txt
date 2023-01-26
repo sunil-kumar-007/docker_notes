@@ -1,0 +1,312 @@
+=======================
+Simple Storage Service (S3)
+=======================
+
+===================================04-06-AWS-29-Dec-22===================================
+
+#########   Amazon S3 : Object storage built to store & retrieve any amount of data from anywhere ########
+
+#########  Note: 5 GB of S3 standard storage for 12 months with the AWS Free Tier ########
+
+
+-> S3 is a storage service in AWS cloud
+
+-> S3 is unlimited storage
+
+-> S3 is object based storage
+
+-> In s3 we can store all flat files (any type of file)
+
+-> We can upload, download and access files from S3 at any point of time
+
+-> The files in s3 can't be executed
+
+-> We can't install OS, DB etc in S3
+
+-> We can't attach S3 to EC2 instance but we can access s3 buckets data from EC2 instance
+
+-> S3 supports static website hosting 
+
+-> S3 is cheaper than EC2 
+
+-> S3 is serverless
+
+-> In S3 we will store data in buckets. Bucket is a container & bucket contains objects 
+
+	object = file
+	key is name of the object
+	
+-> S3 is global but buckets are regional
+
+-> Bucket names are universal or unique 
+
+Note: always create a bucket with your company name or project name.
+
+-> We can't create one bucket inside another bucket
+
+-> We can create multiple buckets in multiple regions
+
+-> Max no.of buckets you can create in S3 is 100 (soft limit)
+
+-> By default buckets are private, if required we can make it public.
+
+create bucket -> inside that create folder called photos -> inside that upload puppy.jpg
+
+Note: Every object will have its own url/endpoint.
+
+Ex: http://8pmbukcet.s3.amazonaws.com/photos/puppy.jpg
+
+bucketname+ domain + object name
+
+-> S3 uses WORM model (Write Once and Read Many)
+
+
+=============================
+Static Website Hosting using S3
+=============================
+
+=> Collection of web pages is called as Website
+
+=> Websites are 2 types
+
+		1) Static Website
+
+		2) Dynamic Website
+
+=> The website which will display same content/response for every user is called as Static website
+
+=> The website which will display response based on user and user request is called as Dynamic Website.
+
+
+########## Website Code Git Repo : https://github.com/ashokitschool/s3_static_website_hosting.git ###########
+
+
+
+1) Create a bucket in S3 
+
+	- Enter unique name for bucket 
+	
+	- uncheck block public access
+	
+
+2) Upload Website content files in bucket (assets folder, index.html and error.html) make sure you given public access for files which we are uploading.
+
+3) Go to Bucket Properties tab -> Enable Static Website hosting and configure index and error pages
+
+index.html for main content
+error.html for wrong url
+
+
+4) It will display URL, access that URL
+
+
+
+
+
+
+#############
+Versioning
+#############
+
+-> Versioning is like a backup tool
+
+-> By default versioning is not enabled on the bucket
+
+-> Versioning is enabled on bucket level but applied on object level.
+
+-> when we upload same file multiple times then versions will be created.
+
+corejava.jpg (v1, v2, v3) - v3 latest version
+
+advjava.jpg (v1, v2, v3) - v3 is latest version
+
+-> If somebody deleted my original object by mistake, for latest version delete marker label will be applied.
+
+
+-> Version ID is always unqiue 
+
+-> versioning files we can download at any time
+
+-> If you delete the original object, delete marker is applid on the latest versioning
+
+-> If you want the object to be re-stored, delete the delete marker and your object is re-stored.
+
+-> You can't download delete marker version, you can only delete it.
+
+-> Once you have enabled the versioning, you can't disable it. You can only suspend it.
+
+-> AWS charges for Versioning, becareful while you enable versioning for huge files.
+
+-> S3 is unlimited storage
+
+min obj size = 0 Bytes
+Max obj size = 5 TB
+
+We can have unlimited no.of 5TB objs in a single bucket
+
+For single PUT, we can upload max 5 GB.
+
+-> If we want to upload bigger file then we shud go for Multi_part upload (MPU) (break files in smaller chunks and upload it)
+
+-> AWS recommended, if you have >100 MB use MPU
+
+###############
+Storage Classes
+###############
+
+-> While uploading the objects into S3 , selecting storage class is mandatory
+
+Scenario : some customers wants to store and wants to access data frequently... some other customers wants to store data but don't want to access frequently... we can't charge same bill for both customers because they have diff businss requirements. 
+
+
+-> To meet business requirements of clients, AWS provided several storage classes in S3 
+
+Standard Frequently Access( FA )
+-----------------------------------------------
+This is used for frequently access data 
+
+Default storage class 
+Regular purpose (storing, website, images etc)
+No retrival charges 
+Availability = 99.9 %
+Durability=999999999 (11 9's)
+Min Obj size is 0 Bytes
+
+Standard In-Frequently Access (IA)
+-------------------------------------------------
+Frequently access but not critical
+Not Retrival charges 
+AWS doesn't recommend to use this
+Cheaper than others
+Availability = 99.9 %
+Durability=99.99%
+min obj size = 128 kb
+min duration : 30 days 
+
+One Zone IA
+-------------------
+In-frequently access but not critical
+
+retrival charges apply
+availability=99.99%
+Durability= 11 9's
+Min Obj size = 128 KB
+min obj size = 128 kb
+min duration : 30 days 
+
+
+
+Intelligent Tiering
+------------------------
+Unknown access pattern
+Based on access it moves from FA to IA
+availability=99.99%
+Durability= 11 9's
+
+min duration : 30 days
+
+Glacier
+-----------
+Infrequently access data 
+archiving purpose
+vault : container of archives
+Archive : Object /Archive(zip) -> 40 TB 
+unlimited no.of archives
+1000 vaults
+Retrival charges apply
+
+
+Glacier has retrival options
+--------------------------------------
+Expedited : 1 to 5 mins
+Standard : 3 to 5 hours
+Bulk : 5 to 12 hours 
+availability=99.99%
+Durability= 11 9's
+Min duration : 90 days
+
+Note: Deep Glocier min duration is 180 days
+
+-> It is possible to move the objects from one storage class to another storage class automatically (LCM) -> Life Cycle management.
+
+
+-> LCM is created on bucket level and applied on object level
+
+-> Life cycle rule  (current version & previous version)
+
+-> my obj moving from FA -> IA (30 days) -> Glacier(60 days) ->this is called transition 
+
+-> Delete after 365 days (Expiration)
+
+-> Object Lock (Permanent Lock & certain period lock)
+
+-> I have a bucket named as movies. 
+
+-> We can enable bucket logs to identify who is accessing our bucket
+
+-----------------------
+Encryption
+---------------------
+Encryption is used for security
+
+Encryption can be done in 2 ways
+
+In-Transit : Encryption while data is moving/flow HTTPS
+
+Data At Rest : Encryption while data is at rest
+
+
+-> Amazon S3 has 3 types of encryptions
+
+serer-side encryption
+SSE - S3 (AWS Managed Key)
+SSE - KMS (AWS KMS Key)
+SSE - C (Customer Provided Key)
+
+client-side encryption (should be handled by customer, how to reach aws is our headache )
+in-transit encryption (using https)
+
+
+-> AWS Certification manager (ACM)
+is where you can generate HTTPS certificates (SSL/TLS/HTTPS)
+
+-> S3 data consistency models - 2 types 
+
+Read after write consistency for PUTS of new objects (immediatley)
+Eventually consistency for overwrites of puts and deletes
+
+-> Pre-Signed URL (it will be accessible for limited time)
+
+
+##########################
+Transfer Acceleration
+##########################
+
+-> If we want to transfer the data from our place to AWS bucket it will use our own internet.
+
+-> We can speed up transfer process using Transfer Acceleration.
+
+-> It is used to transfer data fastly (It will use CDN concept)
+
+-> With CDN it will use AWS internal network
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

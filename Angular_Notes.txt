@@ -1,0 +1,276 @@
+reference========   https://www.tektutorialshub.com/angular/angular-subject-example/
+
+Change detection is the process through which Angular checks to see whether your application state has changed, and if any DOM needs to be updated. At a high level, Angular walks your components from top to bottom, looking for changes. Angular runs its change detection mechanism periodically so that changes to the data model are reflected in an application’s view. Change detection can be triggered either manually or through an asynchronous event (for example, a user interaction or an XMLHttpRequest completion).
+===========
+Angularlifecycle
+==========
+1.ngOnChange()
+2.ngOnInit()
+3.doCheck()
+4.AfterContentInit()
+5.AfterContentChecked()
+6.AfterViewInit()
+7.AfterViewChecked()
+8.DoCheck()
+9.AfterContentChecked()
+10.AfterViewChecked()
+11.OnDestroy()
+==================
+**** Zone.js
+==================
+Angular uses zone.js to detect changes. Zone.js apply patches on all the global asynchronous operations like click event, timer events, HTTP requests, etc. It then intimates the Angular, whenever the changes occur in the Angular Application. The Angular then runs the change detection for the entire application.
+=====================
+What is platformBrowserDynamic
+===============================
+platformBrowserDynamic is the module, which is responsible for loading the Angular application in the desktop browser.
+
+The Angular Applications can be bootstrapped in many ways and in many platforms. For example, we can load our application in a Desktop Browser or in a mobile device with Ionic or NativeScript.
+==================================
+tslint.json: tslint is a static code analysis tool. We use this to check Typescript code quality. To check if TypeScript source code complies with coding rules. TSLint checks your TypeScript code for readability, maintainability, and functionality errors
+=====================
+One way data binding
+=====================
+We bind the data from model to view
+
+String Interpolation:- Angular takes value of the fullName property from the component and inserts it between the opening and closing <h1> element using curly braces used to specify interpolation.
+
+Property binding:- Property binding is an example of one-way databinding where the data is transferred from the component to the class.
+
+=======================================
+Two-way databinding
+======================
+In two-way databinding, automatic synchronization of data happens between the Model and the View. Here, change is reflected in both components. Whenever you make changes in the Model, it will be reflected in the View and when you make changes in View, it will be reflected in Model.
+======================================================
+What is an Angular Component
+==============================
+
+---> The Component is the main building block of an Angular Application.
+
+The Component contains the data & user interaction logic that defines how the View looks and behaves. A view in Angular refers to a template (HTML).
+============================================
+
+Parent to Child Communication
+===================================
+Using @Input Decorator to Pass Data
+
+export class ChildComponent {
+    @Input() someProperty: number;
+}
+
+<child-component [someProperty]=value></child-component>`
+==========================================================
+Child to Parent Communication
+===================================
+1.Listens to Events from Child
+====> EventEmitter Property
+
+2.Uses Local Variable to access the child in the Template
+------->Create a reference variable #child to the Child Component.
+-------><child-component #child></child-component>
+3.Uses a @ViewChild to get a reference to the child component
+ ----->Uses a @ViewChild 
+------> <child-component></child-component>
+------>@ViewChild(ChildComponent) child: ChildComponent;
+======================================
+Communication when there is no relation
+=======================================
+If the Components do not share the Parent-child relationship, 
+then the only way they can share data is by using the services and observable.
+================================================================================================================
+Form and EventEmiiter example
+==================================
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChild,
+    ViewChildren} from "@angular/core";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Platform} from "ionic-angular";
+import * as _ from "lodash";
+import {Config} from "../../providers/core";
+import {LoaderService, PersistentDatasService} from "../../providers/services";
+import {CustomSelectSimpleComponent} from "../custom-select-simple/custom-select-simple";
+
+@Component({
+    selector: "account-form",
+    templateUrl: "account-form.html",
+})
+export class AccountFormComponent implements OnInit {
+
+    @Output() public onInitForm: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
+    @Input() private session: any;
+    @Input() private isDisabled: boolean;
+    @Input() private isEmailDisabled: boolean;
+    @Input() private prefilledDatas: any;
+    @Input() private editMode = false;
+
+    @ViewChild("userProfileSelect") private userProfileSelect: ElementRef;
+    @ViewChild("countryCodeSelect") private countryCodeSelect: ElementRef;
+    @ViewChild("phonePrefixSelect") private phonePrefixSelect: ElementRef;
+    @ViewChildren(CustomSelectSimpleComponent)
+    private customSelectSimpleComponents: QueryList<CustomSelectSimpleComponent>;
+
+    private accountFormGroup: FormGroup;
+    private userProfileList: any[] = [];
+    private countriesList: any[] = [];
+    private phonePrefixList: any[] = [];
+
+    private informationNoticeVisible = false;
+
+    private isMobile = false;
+    private isTablet = false;
+
+    constructor(private fb: FormBuilder,
+                private config: Config,
+                private persistentDatasService: PersistentDatasService,
+                private loaderService: LoaderService,
+                platform: Platform) {
+
+        this.userProfileList = config.get("USER_PROFILE_LIST");
+
+        this.isMobile = platform.is("mobile") || platform.is("mobileweb");
+        this.isTablet = platform.is("tablet") || platform.is("ipad");
+    }
+
+    public ngOnInit() {
+        this.createForm();
+
+        // Countries list retrieval
+        this.persistentDatasService.checkIfUpdateIsNeeded()
+            .subscribe((countriesList) => {
+                if (countriesList) {
+                    this.countriesList = countriesList;
+                    this.phonePrefixList = _.uniqBy(this.countriesList
+                            .filter((c) => c.phonePrefix && c.phonePrefix.length > 0), "phonePrefix")
+                        .sort((a, b) => {
+                            if (a.phonePrefix === b.phonePrefix) { return 0; }
+                            return Number(a.phonePrefix) > Number(b.phonePrefix) ? 1 : -1;
+                        });
+
+                } else {
+                    // TODO : handle countries list retrieval failure
+                    this.loaderService.hide();
+                    // this.close();
+                }
+            });
+    }
+
+    private createForm() {
+
+        const userSession = this.session;
+
+        this.accountFormGroup = this.fb.group({
+            firstName: [
+                {
+                    value: userSession ? userSession.firstName : _.get(this, "prefilledDatas.firstName", ""),
+                    disabled: this.isDisabled,
+                },
+                Validators.required,
+            ],
+            lastName: [
+                {
+                    value: userSession ? userSession.lastName : _.get(this, "prefilledDatas.lastName", ""),
+                    disabled: this.isDisabled,
+                },
+                Validators.required,
+            ],
+            email: [
+                {
+                    value: userSession ? userSession.email : _.get(this, "prefilledDatas.email", ""),
+                    disabled: this.isDisabled || this.isEmailDisabled,
+                }, [
+                    Validators.required,
+                    Validators.pattern(/^[^\s]+@[^\s]+$/),
+                ],
+            ],
+            userProfile: [
+                {
+                    value: userSession ? userSession.userProfile : _.get(this, "prefilledDatas.userProfile", ""),
+                    disabled: this.isDisabled,
+                },
+                Validators.required,
+            ],
+            companyName: [
+                {
+                    value: userSession ? userSession.companyName : _.get(this, "prefilledDatas.companyName", ""),
+                    disabled: this.isDisabled,
+                },
+                Validators.required,
+            ],
+            countryCode: [
+                {
+                    value: userSession ? userSession.countryCode : _.get(this, "prefilledDatas.countryCode", ""),
+                    disabled: this.isDisabled,
+                },
+                Validators.required,
+            ],
+            phonePrefix: [
+                {
+                    value: userSession ? userSession.phonePrefix : _.get(this, "prefilledDatas.phonePrefix", ""),
+                    disabled: this.isDisabled,
+                },
+            ],
+            phoneNumber: [
+                {
+                    value: userSession ? userSession.phoneNumber : _.get(this, "prefilledDatas.phoneNumber", ""),
+                    disabled: this.isDisabled,
+                },
+                // Validators.pattern(/^[\d-\s()+]{1,25}$/),
+            ],
+            creationOfUserAccountCheckIn: [
+                {
+                    value: userSession
+                        ? userSession.creationOfUserAccountCheckIn
+                        : _.get(this, "prefilledDatas.creationOfUserAccountCheckIn", false),
+                    disabled: this.isDisabled,
+                },
+                (this.editMode ? null : Validators.requiredTrue),
+            ],
+            usageStatistics: [
+                {
+                    value: userSession
+                        ? userSession.usageStatistics
+                        : _.get(this, "prefilledDatas.usageStatistics", false),
+                    disabled: this.isDisabled,
+                },
+            ],
+        });
+
+        this.onInitForm.emit(this.accountFormGroup);
+    }
+
+    private selectOption(index: number, elementRefName: string) {
+        // this.closeAllSelect();
+        const select = this[elementRefName].nativeElement;
+        select.querySelector(`option:nth-child(${Number(index) + 2})`).selected = true;
+
+        // Not compatible with IE11
+        // const event = new Event("change");
+        // select.dispatchEvent(event);
+
+        // Hack IE11
+        const event = document.createEvent("Event");
+        event.initEvent("change", false, true);
+        select.dispatchEvent(event);
+
+    }
+
+    private closeAllSelect(nameOfSelectToAvoid: string = null) {
+        if (nameOfSelectToAvoid === null) {
+            this.customSelectSimpleComponents
+                .forEach((customSelectComponent) => customSelectComponent.toggleSelectListVisibility(false));
+        } else {
+            this.customSelectSimpleComponents
+                .forEach((customSelectComponent) => {
+                    if (customSelectComponent.name !== nameOfSelectToAvoid) {
+                        customSelectComponent.toggleSelectListVisibility(false);
+                    }
+                });
+        }
+    }
+
+    private switchValue(valueName: string) {
+        this.accountFormGroup.patchValue({
+            [valueName]: !this.accountFormGroup.get(valueName).value,
+        });
+    }
+
+}
+

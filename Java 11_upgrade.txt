@@ -1,0 +1,95 @@
+Caused by: java.lang.UnsupportedClassVersionError: 
+com/cisco/iwe/portlet/clip/configuration/ClipSecurityAclConfiguration has been compiled 
+by a more recent version of the Java Runtime (class file version 55.0), 
+this version of the Java Runtime only recognizes class file versions up to 52.0 
+(unable to load class [com.cisco.iwe.portlet.clip.configuration.ClipSecurityAclConfiguration])
+
+if got above error then need to upgrade java 11 and create new docker image
+
+CLIP Java 11 upgrade and Tomcat (Tomcat 9 Docker Image)
+=======================================================
+
+apt install openjdk-11-jdk
+
+See what Java alternatives you have installed:
+==============================================
+$ sudo update-java-alternatives  -l
+java-1.11.0-openjdk-amd64      1111       /usr/lib/jvm/java-1.11.0-openjdk-amd64
+java-1.17.0-openjdk-amd64      1711       /usr/lib/jvm/java-1.17.0-openjdk-amd64
+java-1.8.0-openjdk-amd64       1081       /usr/lib/jvm/java-1.8.0-openjdk-amd64
+--------------------------------------------------------------------------------
+We want Java 11 to be the default JVM:
+-----------------------------------------
+
+$ sudo update-java-alternatives  -s java-1.11.0-openjdk-amd64
+update-alternatives: error: no alternatives for mozilla-javaplugin.so
+====You can safely ignore that plugin error.
+==================================================================
+
+Now check to see what version of Java is run by default:
+
+$ java -version
+openjdk version "11.0.16" 2022-07-19
+OpenJDK Runtime Environment (build 11.0.16+8-post-Ubuntu-0ubuntu120.04)
+OpenJDK 64-Bit Server VM (build 11.0.16+8-post-Ubuntu-0ubuntu120.04, mixed mode, sharing)
+=========================================================================================
+set the JAVA_HOME environment variable to point to the system JDK
+-----------------------------------------------------------------
+
+Run the below command in terminal which will open a file.
+
+sudo gedit /etc/bash.bashrc
+
+Add the following line at the end of the file
+
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+
+click on save button availabe at the top right corner of the file.
+
+Then close the gedit. And run the below command :
+
+source /etc/bash.bashrc
+
+Check everything is fine by running below commands:
+
+echo $JAVA_HOME
+echo $M2_HOME
+echo $PATH
+mvn -v
+mvn -version
+java -version
+javac -version
+=================================================================
+
+Local CLIP Tomcat 9 Docker Image
+======================================
+  remove any old tomcat9 docker image 
+
+sudo docker images
+sudo docker rmi 22d923d5caa0
+ - Pick the above mentioned image id from Repository: clip-tomcat-no-ssl having Tag: v9.0.0
+
+
+---- NOTE: Before building image, add necessary users in tomcat-users.xml available under /home/clip/clip-app/clip/docker/tomcat9/ folder
+---- Ensure clip-local.properties has this set -> domain.url=http://localhost:8080/services/clip
+---- Build Tomact9 Docker Image. This will take 10 seconds to build an image.
+
+cd /home/clip/clip-app/clip/docker/tomcat9
+sudo docker build --no-cache -t clip-tomcat-no-ssl:v9.0.0 -f Dockerfile .
+
+
+---- Once the image is built, at the end you'll see below 2 lines having the tomcat9 docker image id
+Successfully built f95b6834fa9a
+Successfully tagged clip-tomcat-no-ssl:v9.0.0
+
+cd /home/clip/clip-app/clip
+sudo docker run --name=tomcat --net=clip-net --rm  -it -p 8080:8080 -p 8787:8787 -v "$(pwd)/target/clip-app-58.0.war:/usr/local/tomcat/webapps/services#clip.war" clip-tomcat-no-ssl:v9.0.0
+
+==============================================================================================================
+
+compiler issues that protect from debug
+========================================
+The package javax.xml.namespace is accessible from more than one module: <unnamed>, java.xml
+
+then remove javax.xml and java.xml.crypto from build path-config build path- module dependencies- removew
+
